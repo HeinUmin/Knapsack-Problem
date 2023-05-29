@@ -45,7 +45,7 @@ int main(int argc, char *argv[]) {
         while ((opt = getopt(argc, argv, "n:c:w:v:o:s:")) != -1) {
             switch (opt) {
             case 'n':
-                n = strtol(argv[1], nullptr, 10);
+                n = strtol(optarg, nullptr, 10);
                 continue;
             case 'c':
                 capacity = optarg;
