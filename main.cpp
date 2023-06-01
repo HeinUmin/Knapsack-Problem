@@ -1,6 +1,5 @@
 #include "utils.h"
 #include <unistd.h>
-using namespace std;
 
 void usage(char *program) {
     cout << "usage: " << program << " {-q <file_question> | -n <count>"
@@ -78,30 +77,21 @@ int main(int argc, char *argv[]) {
         knapsack =
             new Knapsack<TypeWeight, TypeValue>(n, capacity, weight, value);
     }
+    if (!knapsack->isReady()) {
+        cout << "Initialization failed. Please check your input file." << endl;
+        return -1;
+    }
+    auto start = chrono::steady_clock::now();
     if (solve(knapsack)) {
+        auto end = chrono::steady_clock::now();
+        cout << "Time: " << (end - start) / 1us << "us" << endl;
         knapsack->printResult();
         if (optimum) { knapsack->checkOptimum(optimum); }
         if (selection) { knapsack->checkSelection(selection); }
     } else {
         cout << "Cannot solve this problem." << endl;
     }
+    cout << endl;
     delete knapsack;
     return 0;
-}
-
-void sortPack(Knapsack<TypeWeight, TypeValue> *knap,
-              TypeWeight *weight,
-              TypeValue *value,
-              element *q) {
-    int number = knap->getCount();
-    for (int i = 1; i <= number; i++) {
-        q[i - 1].id = i;
-        q[i - 1].value = (double)knap->getValue(i) / knap->getWeight(i);
-    }
-    sort(q, q + number);
-    for (int i = 1; i <= number; i++) {
-        int id = q[number - i].id;
-        weight[i] = knap->getWeight(id);
-        value[i] = knap->getValue(id);
-    }
 }

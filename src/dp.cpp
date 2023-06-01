@@ -1,50 +1,53 @@
 #include "utils.h"
 
+#ifdef USE_DOUBLE
+
+bool solve(Knapsack<TypeWeight, TypeValue> *knapsack) {
+    std::cout << "Dynamic Programming:\n";
+    return false;
+}
+
+#else
+
 namespace {
 Knapsack<TypeWeight, TypeValue> *knap;
-TypeWeight *weight;
-TypeValue *value;
-element *q;
-int **matrix;
+TypeValue **matrix;
 }  // namespace
 
 void dynamicProgram(int i) {
+    TypeWeight w = knap->getWeight(i);
+    TypeValue v = knap->getValue(i);
     for (int y = 0; y <= knap->getCapacity(); y++) {
-        if (y < weight[i]) {
+        if (y < w) {
             matrix[i][y] = matrix[i - 1][y];
             continue;
         }
-        if (matrix[i - 1][y] >= (matrix[i - 1][y - weight[i]] + value[i])) {
+        if (matrix[i - 1][y] >= (matrix[i - 1][y - w] + v)) {
             matrix[i][y] = matrix[i - 1][y];
             continue;
         }
-        matrix[i][y] = matrix[i - 1][y - weight[i]] + value[i];
+        matrix[i][y] = matrix[i - 1][y - w] + v;
     }
 }
 
 void traceback() {
-    int capacity = knap->getCapacity();
-    knap->setOptimum(matrix[knap->getCount()][capacity]);
-    for (int i = knap->getCount(); i > 0; i--) {
+    int n = knap->getCount();
+    TypeWeight capacity = knap->getCapacity();
+    knap->setOptimum(matrix[n][capacity]);
+    for (int i = n; i > 0; i--) {
         if (matrix[i][capacity] == matrix[i - 1][capacity]) {
-            knap->setSelection(q[knap->getCount() - i].id, false);
+            knap->setSelection(i, false);
         } else {
-            knap->setSelection(q[knap->getCount() - i].id, true);
-            capacity = capacity - weight[i];
+            knap->setSelection(i, true);
+            capacity = capacity - knap->getWeight(i);
         }
     }
 }
 
 bool solve(Knapsack<TypeWeight, TypeValue> *knapsack) {
-#ifdef USE_DOUBLE
-    return false;
-#endif
+    cout << "Dynamic Programming:" << endl;
     int n = knapsack->getCount();
     knap = knapsack;
-    weight = new TypeWeight[n + 1]{};
-    value = new TypeValue[n + 1]{};
-    q = new element[n]{};
-    sortPack(knapsack, weight, value, q);
     matrix = new TypeValue *[n + 1];
     for (int i = 0; i <= n; i++) {
         matrix[i] = new TypeValue[knapsack->getCapacity() + 1]{};
@@ -53,8 +56,7 @@ bool solve(Knapsack<TypeWeight, TypeValue> *knapsack) {
     traceback();
     for (int i = 0; i <= n; i++) { delete[] matrix[i]; }
     delete[] matrix;
-    delete[] q;
-    delete[] value;
-    delete[] weight;
-    return knapsack->getOptimum() != 0;
+    return knap->getOptimum() != 0;
 }
+
+#endif  // USE_DOUBLE

@@ -1,10 +1,7 @@
 #include "utils.h"
 #include <queue>
 
-using namespace std;
-
-struct Pnode
-{
+struct Pnode {
     bool *selection;
     int level;
     TypeWeight weight;
@@ -15,9 +12,6 @@ struct Pnode
 
 namespace {
 Knapsack<TypeWeight, TypeValue> *knap;
-TypeWeight *weight;
-TypeValue *value;
-element *q;
 TypeValue min_cost;
 priority_queue<Pnode, vector<Pnode>, greater<>> pq;
 }  // namespace
@@ -33,15 +27,17 @@ void branchBound(Pnode node) {
         min_cost = node.cx;
         knap->setOptimum(node.value);
         for (int i = 1; i <= n; i++) {
-            knap->setSelection(q[n - i].id, node.selection[i]);
+            knap->setSelection(i, node.selection[i]);
         }
         delete[] node.selection;
         return;
     }
-    if (node.weight + weight[node.level] <= knap->getCapacity()) {
+    TypeWeight w = knap->getWeight(node.level);
+    TypeValue v = knap->getValue(node.level);
+    if (node.weight + w <= knap->getCapacity()) {
         Pnode left = Pnode();
-        left.weight = node.weight + weight[node.level];
-        left.value = node.value + value[node.level];
+        left.weight = node.weight + w;
+        left.value = node.value + v;
         left.level = node.level + 1;
         left.cx = node.cx;
         left.selection = new bool[left.level]{};
@@ -55,7 +51,7 @@ void branchBound(Pnode node) {
     right.weight = node.weight;
     right.value = node.value;
     right.level = node.level + 1;
-    right.cx = node.cx + value[node.level];
+    right.cx = node.cx + v;
     right.selection = new bool[right.level]{};
     for (int i = 1; i < node.level; i++) {
         right.selection[i] = node.selection[i];
@@ -66,19 +62,12 @@ void branchBound(Pnode node) {
 }
 
 bool solve(Knapsack<TypeWeight, TypeValue> *knapsack) {
-    int n = knapsack->getCount();
+    cout << "Branch and Bound:" << endl;
     knap = knapsack;
-    weight = new TypeWeight[n + 1]{};
-    value = new TypeValue[n + 1]{};
-    q = new element[n]{};
-    sortPack(knapsack, weight, value, q);
     min_cost = 0;
     Pnode first = Pnode();
     first.level = 1;
     pq.push(first);
     while (!pq.empty()) { branchBound(pq.top()); }
-    delete[] q;
-    delete[] weight;
-    delete[] value;
-    return true;
+    return knap->getOptimum() != 0;
 }
