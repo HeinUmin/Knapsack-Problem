@@ -5,6 +5,7 @@
 using namespace std;
 
 #ifdef USE_DOUBLE
+constexpr double EPS = 1e-6;  // 数据精度默认为1e-6
 typedef double TypeWeight;
 typedef double TypeValue;
 #else

@@ -8,7 +8,7 @@ TypeValue max_value;
 bool *selection;
 }  // namespace
 
-TypeValue bound(int i) {
+TypeValue bound(int i) {  // 连续背包问题的上界
     TypeWeight left = knap->getCapacity() - current_weight;
     TypeValue bound = current_value;
     while (i <= knap->getCount() && knap->getWeight(i) <= left) {
@@ -23,8 +23,8 @@ TypeValue bound(int i) {
 }
 
 void backTrack(int i) {
-    if (i > knap->getCount()) {
-        if (current_value > max_value) {
+    if (i > knap->getCount()) {           // 到达叶子结点
+        if (current_value > max_value) {  // 更新最优解
             max_value = current_value;
             for (int j = 1; j <= knap->getCount(); j++) {
                 knap->setSelection(j, selection[j]);
@@ -42,7 +42,7 @@ void backTrack(int i) {
         current_weight -= w;
         current_value -= v;
     }
-    if (bound(i + 1) > max_value) {
+    if (bound(i + 1) > max_value) {  // 右子树可展开
         selection[i] = false;
         backTrack(i + 1);
     }

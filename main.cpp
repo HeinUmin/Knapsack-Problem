@@ -1,4 +1,5 @@
 #include "utils.h"
+#include <chrono>
 #include <unistd.h>
 
 void usage(char *program) {
@@ -28,7 +29,7 @@ int main(int argc, char *argv[]) {
                 usage(argv[0]);
                 return -1;
             }
-            if (access(optarg, R_OK) < 0) {
+            if (access(optarg, R_OK) < 0) {  // 判断文件是否可读
                 cout << "Cannot read file: " << optarg << endl;
                 return -1;
             }
@@ -40,14 +41,14 @@ int main(int argc, char *argv[]) {
         knapsack = new Knapsack<TypeWeight, TypeValue>(question);
     } else {
         int n = 0;
-        char *capacity = nullptr, *weight = nullptr, *value = nullptr;
+        char *capa = nullptr, *weight = nullptr, *value = nullptr;
         while ((opt = getopt(argc, argv, "n:c:w:v:o:s:")) != -1) {
             switch (opt) {
             case 'n':
                 n = strtol(optarg, nullptr, 10);
                 continue;
             case 'c':
-                capacity = optarg;
+                capa = optarg;
                 break;
             case 'w':
                 weight = optarg;
@@ -70,20 +71,19 @@ int main(int argc, char *argv[]) {
                 return -1;
             }
         }
-        if (!n || !capacity || !weight || !value) {
+        if (!n || !capa || !weight || !value) {
             usage(argv[0]);
             return -1;
         }
-        knapsack =
-            new Knapsack<TypeWeight, TypeValue>(n, capacity, weight, value);
+        knapsack = new Knapsack<TypeWeight, TypeValue>(n, capa, weight, value);
     }
-    if (!knapsack->isReady()) {
+    if (!knapsack->isReady()) {  // 判断是否初始化成功
         cout << "Initialization failed. Please check your input file." << endl;
         return -1;
     }
-    auto start = chrono::steady_clock::now();
-    if (solve(knapsack)) {
-        auto end = chrono::steady_clock::now();
+    auto start = chrono::steady_clock::now();    // 计时开始
+    if (solve(knapsack)) {                       // 求解0/1背包问题
+        auto end = chrono::steady_clock::now();  // 计时结束
         cout << "Time: " << (end - start) / 1us << "us" << endl;
         knapsack->printResult();
         if (optimum) { knapsack->checkOptimum(optimum); }

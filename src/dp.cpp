@@ -1,7 +1,7 @@
 #include "utils.h"
 
 #ifdef USE_DOUBLE
-
+// 矩阵法无法使用double类型
 bool solve(Knapsack<TypeWeight, TypeValue> *knapsack) {
     std::cout << "Dynamic Programming:\n";
     return false;
@@ -11,7 +11,7 @@ bool solve(Knapsack<TypeWeight, TypeValue> *knapsack) {
 
 namespace {
 Knapsack<TypeWeight, TypeValue> *knap;
-TypeValue **matrix;
+TypeValue **matrix;  // 动态规划矩阵
 }  // namespace
 
 void dynamicProgram(int i) {
@@ -52,8 +52,8 @@ bool solve(Knapsack<TypeWeight, TypeValue> *knapsack) {
     for (int i = 0; i <= n; i++) {
         matrix[i] = new TypeValue[knapsack->getCapacity() + 1]{};
     }
-    for (int i = 1; i <= n; i++) { dynamicProgram(i); }
-    traceback();
+    for (int i = 1; i <= n; i++) { dynamicProgram(i); }  // 动态规划求解
+    traceback();  // 回溯求解物品选择状态
     for (int i = 0; i <= n; i++) { delete[] matrix[i]; }
     delete[] matrix;
     return knap->getOptimum() != 0;

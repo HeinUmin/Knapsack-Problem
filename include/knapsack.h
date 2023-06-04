@@ -1,6 +1,7 @@
 #ifndef KNAPSACK_H
 #define KNAPSACK_H
 
+#include <algorithm>
 #include <fstream>
 #include <iostream>
 
@@ -15,7 +16,7 @@ class Knapsack {
         TypeW weight;
         TypeV value;
         bool selection;
-        bool operator<(const Item &item) const {
+        bool operator<(const Item &item) const {  // 按价值率排序
             return (double)value / weight > (double)item.value / item.weight;
         }
     } *item;
@@ -28,7 +29,7 @@ class Knapsack {
     Knapsack &operator=(const Knapsack &) = delete;
     Knapsack(Knapsack &&) = delete;
     Knapsack &operator=(Knapsack &&) = delete;
-    [[nodiscard]] bool isReady() const;
+    [[nodiscard]] bool isReady() const;  // 检查是否初始化成功
     [[nodiscard]] int getCount() const;
     [[nodiscard]] TypeW getCapacity() const;
     [[nodiscard]] TypeV getOptimum() const;
@@ -37,8 +38,8 @@ class Knapsack {
     [[nodiscard]] bool getSelection(int index) const;
     void setOptimum(TypeV opti);
     bool setSelection(int index, bool select = true);
-    bool checkOptimum(char *file_o) const;
-    bool checkSelection(char *file_s) const;
+    bool checkOptimum(char *file_o) const;    // 检查最优解是否正确
+    bool checkSelection(char *file_s) const;  // 检查物品选择是否正确
     void printResult() const;
 };
 
@@ -156,7 +157,7 @@ bool Knapsack<TypeW, TypeV>::checkSelection(char *file_s) const {
     int select_ans = false;
     bool *selection = new bool[count + 1];
     for (int i = 1; i <= count; i++) {
-        selection[item[i].id] = item[i].selection;
+        selection[item[i].id] = item[i].selection;  // selection按照id排序
     }
     file.open(file_s);
     for (int i = 1; i <= count; i++) {
@@ -176,10 +177,10 @@ template <typename TypeW, typename TypeV>
 void Knapsack<TypeW, TypeV>::printResult() const {
     bool *selection = new bool[count + 1];
     for (int i = 1; i <= count; i++) {
-        selection[item[i].id] = item[i].selection;
+        selection[item[i].id] = item[i].selection;  // selection按照id排序
     }
     std::cout << "optimum: " << optimum << std::endl << "selection: ";
-    for (int i = 1; i <= count; i++) { std::cout << selection[i] << " "; }
+    for (int i = 1; i <= count; i++) { std::cout << selection[i]; }
     std::cout << std::endl;
     delete[] selection;
 }
