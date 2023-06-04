@@ -1,5 +1,8 @@
 ## 介绍
-本实验针对0/1背包问题，利用动态规划算法，回溯算法和分支限界算法，对Florida State University和Unicauca University两种0/1背包问题数据集进行求解，其中动态规划采用二维数组和元组两种方式存储，回溯法采用了限界函数的形式来优化计算步骤，分支限界法则采用LC-优先级队列的方式。
+本实验针对0/1背包问题，利用动态规划算法，回溯算法和分支限界算法，
+对Florida State University和Unicauca University两种0/1背包问题数据集进行求解，
+其中动态规划采用二维数组和元组两种方式存储，回溯法采用了限界函数的形式来优化计算步骤，
+分支限界法则采用LC-优先级队列的方式。
 
 ## 流程图
 ![流程图](res/chart.svg)
@@ -70,5 +73,5 @@ cmake --build build
 再执行[test.bat](test.bat)文件进行测试。
 
 ### Liunx 批量测试
-先使用`chmod +x test.sh`赋予测试文件可执行权限，
+先使用`chmod +x test.sh`和`chmod -R +x bin`赋予文件可执行权限，
 再执行[test.sh](test.sh)文件进行测试。
