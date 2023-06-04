@@ -36,9 +36,8 @@
 │   ├── large_scale-optimum  # Unicauca University数据集最优解
 │   ├── low-dimensional  # Unicauca University数据集（小规模）
 │   └── low-dimensional-optimum  # Unicauca University数据集最优解
-└── test  # 测试目录
-    ├── test.bat  # Windows测试文件
-    └── test.sh  # Linux测试文件
+├── test.bat  # Windows测试文件
+└── test.sh  # Linux测试文件
 ```
 
 ## 构建
@@ -61,14 +60,15 @@ cmake --build build
 构建的输出目录为[build](build)，编译出的可执行文件的输出目录为[bin](bin)。
 
 ## 测试
-
 ### 参数说明
 数据集A（UU数据集）：`<algorithm_name> -q <file_question> [-o <file_optimum>]`
 
 数据集B（FSU数据集）：`<algorithm_name> -n <count> -c <file_capacity> -w <file_weight> -v <file_value>} [-s <file_selection>]`
 
 ### Windows 批量测试
-执行[test/test.bat](test/test.bat)文件即可。
+使用文本编辑器打开[test.bat](test.bat)文件，修改行尾序列为CRLF，
+再执行[test.bat](test.bat)文件进行测试。
 
 ### Liunx 批量测试
-执行[test/test.sh](test/test.sh)文件即可。
+先使用`chmod +x test.sh`赋予测试文件可执行权限，
+再执行[test.sh](test.sh)文件进行测试。
