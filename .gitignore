@@ -4,3 +4,4 @@ backup/
 bin/
 build/
 *.zip
+*.tar
